@@ -165,12 +165,12 @@ bool Viewer::render()
         fb_width_half = (fb_width + 1) / 2;
         fb_height_half = (fb_height + 1) / 2;
 
-        glViewport(x, y, fb_width_half, fb_height_half);
-        x += fb_width_half;
+        glViewport(x, y, fb_width, fb_height);
+        x += fb_width;
         if (x >= (fb_width - 1))
         {
             x = 0;
-            y += fb_height_half;
+            y += fb_height;
         }
 
         float w = static_cast<float>(frame->width);
