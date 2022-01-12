@@ -1,3 +1,0 @@
-/home/yug/devel/ros_ws/src/kinect_mono_feature_matching/src/build/CMakeFiles/rebuild_cache.dir
-/home/yug/devel/ros_ws/src/kinect_mono_feature_matching/src/build/CMakeFiles/edit_cache.dir
-/home/yug/devel/ros_ws/src/kinect_mono_feature_matching/src/build/CMakeFiles/kinect_interface_tester.dir
