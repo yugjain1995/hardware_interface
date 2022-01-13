@@ -3,6 +3,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 # Set project name
 PROJECT(kinect_interface VERSION 1.0)
 
+# Set frenect2 library path variable
+set(freenect2_DIR $ENV{HOME}/freenect2/lib/cmake/freenect2)
+
 # find and load packages
 find_package(freenect2 REQUIRED)
 find_package(glfw3 REQUIRED)
