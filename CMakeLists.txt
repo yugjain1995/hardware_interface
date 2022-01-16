@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(kinect_mono_feature_matching)
+project(hardware_interface)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,11 +8,12 @@ project(kinect_mono_feature_matching)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  freenect2
   roscpp
   rospy
   std_msgs
+  genmsg
 )
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -205,3 +206,4 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_subdirectory(src/kinect_interface)

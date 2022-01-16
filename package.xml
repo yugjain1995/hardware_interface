@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>kinect_mono_feature_matching</name>
+  <name>hardware_interface</name>
   <version>0.0.0</version>
-  <description>The kinect_mono_feature_matching package</description>
+  <description>The hardware_interface package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="yug@todo.todo">yug</maintainer>
+  <maintainer email="yugjain1995@gmail.com">Yug Jain</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -19,13 +19,13 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/kinect_mono_feature_matching</url> -->
+  <!-- <url type="website">http://wiki.ros.org/hardware_interface</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
   <!-- Authors do not have to be maintainers, but could be -->
   <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+  <author email="yugjain1995@gmail.com">Yug Jain</author>
 
 
   <!-- The *depend tags are used to specify dependencies -->
