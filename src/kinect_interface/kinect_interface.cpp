@@ -7,12 +7,12 @@
 #include <libfreenect2/packet_pipeline.h>
 
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <sensor_msgs/image_encodings.h>
 #include <image_transport/image_transport.h>
 #include <opencv4/opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 
-#include <boost/log/trivial.hpp>
 #include <chrono>
 /// [headers]
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 /// [discovery]
   if(freenect2.enumerateDevices() == 0)
   {
-    BOOST_LOG_TRIVIAL(error) << "no device connected!" << std::endl;
+    ROS_ERROR( "no device connected!\n" );
     return -1;
   }	
   std::string serial = freenect2.getDefaultDeviceSerialNumber();
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
 if(dev == 0)
   {
-    BOOST_LOG_TRIVIAL(error) << "failure opening device!" << std::endl;
+    ROS_ERROR( "failure opening device!\n" );
     return -1;
   }
 
@@ -64,12 +64,12 @@ if(dev == 0)
 /// [start]
   if (!dev->startStreams(true, false))
     {
-      BOOST_LOG_TRIVIAL(error) << "faliure to start stream to listner";
+      ROS_ERROR( "faliure to start stream to listner" );
       return -1;
     }
-  BOOST_LOG_TRIVIAL(info) << "device - Kinect v2\n";
-  BOOST_LOG_TRIVIAL(info) << "device serial: " << dev->getSerialNumber() << std::endl;
-  BOOST_LOG_TRIVIAL(info) << "device firmware: " << dev->getFirmwareVersion() << std::endl;
+  ROS_INFO( "device - Kinect v2\n" );
+  ROS_INFO_STREAM( "device serial: " << dev->getSerialNumber() << std::endl );
+  ROS_INFO_STREAM( "device firmware: " << dev->getFirmwareVersion() << std::endl );
 /// [start]
 
   ros::Rate loop_rate(10);
@@ -78,7 +78,7 @@ if(dev == 0)
     auto start = std::chrono::high_resolution_clock::now();
     if (!listener.waitForNewFrame(frames, 0.06*1000)) // 0.06 seconds
     {
-      BOOST_LOG_TRIVIAL(warning) << "Timeout!" << std::endl;
+      ROS_ERROR( "Timeout!\n" );
       ros::spinOnce();
       continue;
     }
@@ -97,16 +97,16 @@ if(dev == 0)
     sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", grey_frame).toImageMsg();
     image_pub.publish(msg);
     cv::waitKey(1); // Why do we use this delay/wait?
-    BOOST_LOG_TRIVIAL(info) << "Published image frame.\n";
+    ROS_INFO( "Published image frame.\n" );
   /// [Convert cv::Mat to ROS image message]
 
     listener.release(frames);
-    BOOST_LOG_TRIVIAL(info) << "Released image frame.\n";
+    ROS_INFO( "Released image frame.\n" );
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     auto frame_rate = 1000/(float)duration.count();
-    BOOST_LOG_TRIVIAL(info) << "Frame rate = " << frame_rate << "\n";
+    ROS_INFO_STREAM( "Frame rate = " << std::to_string(frame_rate) << std::endl );
 
     ros::spinOnce();
     loop_rate.sleep();
