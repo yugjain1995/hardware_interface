@@ -1,7 +1,16 @@
-#include <iostream>
-#include <cstdlib>
+/************************************************************************************
+Author - Yug Jain
+***********************************************************************************/
+
+/************************************************************************************
+This code provide function implementation to get the RGB images from Kinect v2 over
+USB 3.0, convert the image to grey scale and publish the grey scale images on a topic
+using ROS image_transport package.
+************************************************************************************/
 
 /// [headers]
+#include <iostream>
+#include <cstdlib>
 #include <libfreenect2/libfreenect2.hpp>
 #include <libfreenect2/frame_listener_impl.h>
 #include <libfreenect2/packet_pipeline.h>
@@ -16,36 +25,38 @@
 #include <chrono>
 /// [headers]
 
+
+/******************************************************************/
 int main(int argc, char **argv)
 {
-/// [initialize ROS node]
+// initialize ROS node
   ros::init(argc, argv, "kinect_image_publisher");
   ros::NodeHandle n;
-///[initialize ROS node]
 
-/// [initialize image publisher]
+
+// initialize image publisher
   image_transport::ImageTransport it(n);
   image_transport::Publisher image_pub = it.advertise("camera/image", 1);
-/// [initialize image publisher]
 
-/// [initialize freenect2 library variables]
+
+// initialize freenect2 library variables
   libfreenect2::Freenect2 freenect2;
   libfreenect2::Freenect2Device *dev = 0;
   libfreenect2::PacketPipeline *pipeline = 0;
-/// [initialize freenect2 library variables]
 
-/// [discovery]
+
+// discovery
   if(freenect2.enumerateDevices() == 0)
   {
     ROS_ERROR( "no device connected!\n" );
     return -1;
   }	
   std::string serial = freenect2.getDefaultDeviceSerialNumber();
-/// [discovery]
 
-/// [open]
+
+// open
   dev = freenect2.openDevice(serial);
-/// [open]
+
 
 if(dev == 0)
   {
@@ -53,15 +64,15 @@ if(dev == 0)
     return -1;
   }
 
-/// [listeners]
+// listeners
   int types = 0;
   types |= libfreenect2::Frame::Color;
   libfreenect2::SyncMultiFrameListener listener(types);
   libfreenect2::FrameMap frames;
   dev->setColorFrameListener(&listener);
-/// [listeners]
 
-/// [start]
+
+// start
   if (!dev->startStreams(true, false))
     {
       ROS_ERROR( "faliure to start stream to listner" );
@@ -70,7 +81,7 @@ if(dev == 0)
   ROS_INFO( "device - Kinect v2\n" );
   ROS_INFO_STREAM( "device serial: " << dev->getSerialNumber() << std::endl );
   ROS_INFO_STREAM( "device firmware: " << dev->getFirmwareVersion() << std::endl );
-/// [start]
+
 
   ros::Rate loop_rate(10);
   while(n.ok())
@@ -84,21 +95,21 @@ if(dev == 0)
     }
     libfreenect2::Frame *rgb = frames[libfreenect2::Frame::Color];
     
-  /// [Convert RGB from freenect to OpenCV cv::Mat image]
+  // Convert RGB from freenect to OpenCV cv::Mat image
     cv::Mat rgb_frame = cv::Mat(rgb->height, rgb->width, CV_8UC4, rgb->data);
-  /// [Convert RGB from freenect to OpenCV cv::Mat image]
+  
 
-  /// [Convert RGB in cv::Mat to grey scale]
+  // Convert RGB in cv::Mat to grey scale
     cv::Mat grey_frame;
     cv::cvtColor(rgb_frame, grey_frame, cv::COLOR_BGRA2GRAY);
-  /// [Convert RGB in cv::Mat to grey scale]
+  
 
-  /// [Convert cv::Mat to ROS image message and publish the image message]
+  // Convert cv::Mat to ROS image message and publish the image message
     sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", grey_frame).toImageMsg();
     image_pub.publish(msg);
     cv::waitKey(1); // Why do we use this delay/wait?
     ROS_INFO( "Published image frame.\n" );
-  /// [Convert cv::Mat to ROS image message]
+  
 
     listener.release(frames);
     ROS_INFO( "Released image frame.\n" );
@@ -116,3 +127,4 @@ if(dev == 0)
   dev->close();
   return 0;
 }
+/******************************************************************/
